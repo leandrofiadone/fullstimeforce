@@ -1,9 +1,11 @@
 import express from "express"
-import passport from "passport"
 import session from "express-session"
+import passport from "passport"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
-import "./auth" // Importa el archivo de configuración de Passport
+import "./config/auth" // Importa el archivo de configuración de Passport
+import authRoutes from "./routes/authRoutes"
+import {connectDB} from "./config/database"
 
 // Cargar variables de entorno
 dotenv.config()
@@ -24,10 +26,7 @@ requiredEnvVars.forEach((envVar) => {
 })
 
 // Conectar a la base de datos MongoDB
-mongoose
-  .connect(process.env.MONGODB_URL!)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("MongoDB connection error:", err))
+connectDB()
 
 const app = express()
 
@@ -41,26 +40,7 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.get("/auth/google", passport.authenticate("google", {scope: ["profile"]}))
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {failureRedirect: "/"}),
-  (req, res) => {
-    res.redirect("/")
-  }
-)
-
-app.get(
-  "/auth/github",
-  passport.authenticate("github", {scope: ["user:email"]})
-)
-app.get(
-  "/auth/github/callback",
-  passport.authenticate("github", {failureRedirect: "/"}),
-  (req, res) => {
-    res.redirect("/")
-  }
-)
+app.use("/auth", authRoutes)
 
 app.get("/", (req, res) => {
   res.send("Hello World!")

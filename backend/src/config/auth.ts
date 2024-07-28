@@ -7,24 +7,11 @@ import {
   Strategy as GitHubStrategy,
   Profile as GitHubProfile
 } from "passport-github2"
-import {User} from "./models/User"
+import {User} from "../models/User"
 import dotenv from "dotenv"
 
 // Cargar variables de entorno
 dotenv.config()
-
-// Verificar que las variables de entorno estén cargadas
-if (
-  !process.env.GOOGLE_CLIENT_ID ||
-  !process.env.GOOGLE_CLIENT_SECRET ||
-  !process.env.GITHUB_CLIENT_ID ||
-  !process.env.GITHUB_CLIENT_SECRET
-) {
-  console.error(
-    "Las variables de entorno para OAuth no están definidas correctamente."
-  )
-  process.exit(1)
-}
 
 passport.use(
   new GoogleStrategy(

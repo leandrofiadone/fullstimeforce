@@ -12,6 +12,7 @@ interface IBlogPost extends Document {
 const BlogPostSchema: Schema = new Schema({
   title: {type: String, required: true},
   content: {type: String, required: true},
+  // esto debe estar referenciado al User.ts
   author: {type: String, required: true},
   createdAt: {type: Date, default: Date.now},
   updatedAt: {type: Date, default: Date.now}
